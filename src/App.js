@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react'
+import { useState, useEffect, useRef} from 'react'
 import axios from 'axios'
 import Note from './components/Note.js'
 import noteService from './services/notes.js'
@@ -15,6 +15,7 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
     const [loginVisible, setLoginVisible] = useState(false)
+    const noteFormRef = useRef()
     useEffect(() => {
         noteService
             .getAll()
@@ -31,6 +32,7 @@ const App = () => {
         }
     } ,[])
     const addNote = (noteObject) => {
+        noteFormRef.current.toggleVisibility()
         noteService
             .create(noteObject)
             .then(returnedNote => {
@@ -94,7 +96,7 @@ const App = () => {
                 </Togglable>:
                 <div>
                     <p>{user.name} logged in </p>
-                    <Togglable buttonLabel="new note">
+                    <Togglable buttonLabel="new note" ref={noteFormRef}>
                     <NoteForm createNote={addNote}/>
                 </Togglable>
                 </div>
